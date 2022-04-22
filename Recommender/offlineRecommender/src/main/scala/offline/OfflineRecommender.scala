@@ -1,0 +1,5 @@
+package offline
+
+object OfflineRecommender {
+
+}
