@@ -3,8 +3,6 @@ package offline
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 
-case class MongoConfig(uri: String, db: String)
-
 case class MovieRating(uid: Int, mid: Int, score: Double, timestamp: Int)
 
 object OfflineRecommender {
@@ -27,20 +25,10 @@ object OfflineRecommender {
     // SparkSession
     val spark = SparkSession.builder().config(sparkConf).getOrCreate()
 
-    // MongoDBConfig
-    val mongoConfig = MongoConfig(config("mongo.uri"), config("mongo.db"))
+    val moviesPath = "offlineRecommender/src/main/resources/movies.csv"
+    val ratingsPath = "offlineRecommender/src/main/resources/ratings.csv"
+    val tagsPath = "offlineRecommender/src/main/resources/tags.csv"
 
-    import spark.implicits._
-    val ratingRDD = spark
-      .read
-      .option("uri", mongoConfig.uri)
-      .option("collection", MONGODB_RATING_COLLECTION)
-      .format("com.mongodb.spark.sql")
-      .load()
-      .as[MovieRating]
-      .rdd
-      .map(rating=> ( rating.uid, rating.mid, rating.score ))
-      .cache()
     // train ALS model
 
   }
