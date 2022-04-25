@@ -1,7 +1,5 @@
 package offline
 
-import au.com.bytecode.opencsv.CSVWriter
-import org.apache.spark.SparkConf
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, FileUtil, Path}
 import org.apache.spark.sql.{SparkSession, functions}
@@ -12,7 +10,6 @@ import org.apache.spark.sql.types.{DoubleType, IntegerType}
 import org.jblas.DoubleMatrix
 
 import java.io.{BufferedWriter, File, FileWriter}
-import scala.collection.mutable.ListBuffer
 
 case class MovieRating(uid: Int, mid: Int, score: Double, timestamp: String)
 
@@ -33,13 +30,6 @@ object OfflineRecommender {
 
   def main(args: Array[String]): Unit = {
 
-
-    //
-    //    val sparkConf = new SparkConf().setAppName("OfflineRecommender").setMaster(config("spark.cores"))
-    //      .set("spark.executor.memory", "6G").set("spark.driver.memory", "3G")
-    //
-    //    // SparkSession
-    //    val spark = SparkSession.builder().config(sparkConf).getOrCreate()
     val spark = SparkSession
       .builder()
       .master("local[*]")
@@ -142,8 +132,6 @@ object OfflineRecommender {
     hdfs.delete(srcPath,true)
 
     spark.stop()
-    // train ALS model
-
   }
 
   def consinSim(x: DoubleMatrix, y: DoubleMatrix): Double = {
